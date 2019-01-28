@@ -39,10 +39,17 @@ FileOnWrite.prototype.write = function(data) {
   var transformedData = this.transform.call(this.context, data);
   // Write data
   if (this.sync) {
-    fs.writeFileSync(file, transformedData);
+    try {
+      fs.writeFileSync(file, transformedData);
+      this.emit('data', {file, transformedData, data});
+    } catch(err) {
+      if (err) this.emit('error', err);
+    }
   } else {
     fs.writeFile(file, transformedData, function(err) { 
-      if (err) this.emit('error', err); 
+      if (err) this.emit('error', err);
+
+      this.emit('data', {file, transformedData, data});
     }); 
   }
 };
