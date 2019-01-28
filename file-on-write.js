@@ -41,7 +41,7 @@ FileOnWrite.prototype.write = function(data) {
   if (this.sync) {
     try {
       fs.writeFileSync(file, transformedData);
-      this.emit('data', {file, transformedData, data});
+      this.emit('data', {fileLocation: file});
     } catch(err) {
       if (err) this.emit('error', err);
     }
@@ -49,7 +49,7 @@ FileOnWrite.prototype.write = function(data) {
     fs.writeFile(file, transformedData, function(err) { 
       if (err) this.emit('error', err);
 
-      this.emit('data', {file, transformedData, data});
+      this.emit('data', {fileLocation: file});
     }); 
   }
 };
